@@ -11,7 +11,7 @@ pool.new = function()
     base.call = function(class, name) base[class][name]() end
     return base
 end
-local print = function(k) print("[T0PK3K dbg]: ".. k) end
+
  
 --- init base ---
  
