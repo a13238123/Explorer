@@ -1,87 +1,727 @@
-pcall(function()
---esp(av(),dw()) (curtime,reqtime)
-pool = {}
-pool.new = function()
-    local base = {}
-    base.global = {}
-    base.class = function(name) base[name] = {} end
-    base.add = function(class, name, func) base[class][name] = func end
-    base.define = function(class, name, val) base[class][name] = val end
-    base.get = function(class, name) return base[class][name] end
-    base.call = function(class, name) base[class][name]() end
-    return base
+if game:GetService("CoreGui"):FindFirstChild("ExplorerButton") == nil then
+local screengui = Instance.new("ScreenGui")
+screengui.Parent = game:GetService("CoreGui")
+screengui.Name = "ExplorerButton"
+local text = Instance.new("TextButton")
+text.Parent = screengui
+text.Active = true
+text.BackgroundColor = BrickColor.new("Really black")
+text.BorderColor3 = Color3.new(255/255,0/0,0/0)
+text.Position = UDim2.new(0.24,0,0.97,0)
+text.Size = UDim2.new(0.1,0,0.025,0)
+text.Text = "Explorer"
+text.TextColor3 = Color3.new(255/255,255/255,255/255)
+
+text.MouseButton1Down:connect(function()
+if game:GetService("CoreGui"):FindFirstChild("ExplorerGui") == nil and game:GetService("CoreGui"):FindFirstChild("PropertiesGui") == nil then
+
+Properties={nil,"Ticket","VideoQualitySettings","UploadSetting","TweenStatus","TopBottom","TickCountSampleMethod","ThreadPoolConfig","SurfaceType","SurfaceConstrait","Style","Stuff","Status","SpecialKey","SoundType","SleepAdjustMethod","SizeConstraint","Shadow","SavedQualitySetting","ReverbType","Resolution","QualityLevel","PyrimidSides","PrivilegeType","PrismSides","PriorityMethod","PlayerChatType","PhysicsSendMethod","PhysicsRecieveMethod","PartType","PacketReliability","NormalId","MoveState","MeshType","MaterialQuality","LevelOfDetailSetting","LeftRight","KeywordFilterType","JointType","InputType","InOut","HandlesStyle","GraphicsMode","GeometryQuality","Genre","GearType","GearGenreSetting","FunctionalTestResult","FriendStatus","FriendRequestEvent","FramerateManagerMode","FrameStyle","ErrorReporting","PhysicsThrottle","Enviromental","EasingStyle","EasingDirection","DialogTone","DialogPurpose","D3DFORMAT","D3DDEVTYPE","CreatorType","ControlMode","ConcurrencyModel","ChatStyle","ChatMode","ChatColor","CenterDialogType","CellOrientation","CellMaterial","CellBlock","CameraType","","","","","ButtonStyle","Button","BuildPermission","BodyPart","BinType","Bevels","Axis","Antialiasing","AnimationPriority","AffectType","ActionType","AASamples","Source","Name","ScriptsDisabled","GarbageCollectionLimit","GarbageCollectionFrequency","DataCost","RobloxLocked","Version","className","Parent","archivable","AttachmentForward","AttachmentPos","AttachmentRight","AttachmentUp","AnimationId","HeadColor","RightArmColor","LeftArmColor","TorsoColor","LeftLegColor","RightLegColor","Value","CameraType","CameraSubject","BaseTextureId","BodyPart","MeshId","OverlayTextureId","MaxActivationDistance","Shiny","Specular","Texture","Face","GripForward","GripPos","GripRight","GripUp","TextureId","TeamColor","Enabled","CFrame","BrickColor","Material","Reflectance","Transparency","Position","RotVelocity","Velocity","Anchored","CanCollide","Locked","Elasticity","Friction","Shape","Size","formFactor","BackSurface","BottomSurface","FrontSurface","LeftSurface","RightSurface","TopSurface","AbsolutePosition","AbsoluteSize","Active","BackgroundColor3","BackgroundTransparency","BorderColor3","BorderSizePixel","SizeConstraint","Visible","ZIndex","C0","C1","Part0","Part1","BinType","LeftLeg","RightLeg","Torso","Health","MaxHealth","WalkSpeed","Jump","PlatformStand","Sit","AutoButtonColor","Image","LinkedSource","Disabled","Text","PrimaryPart","CurrentAngle","DesiredAngle","MaxVelocity","PantsTemplate","ShirtTemplate","SoundId","Pitch","IsPlaying","IsPaused","Looped","PlayOnRemove","StudsPerTileU","StudsPerTileV","userId","BubbleChat","ClassicChat","MaxPlayers","NumPlayers","LocalPlayer","CharacterAppearance","Character","CurrentCamera","Ambient","Brightness","ColorShift_Bottom","ColorShift_Top","ShadowColor","GeographicLatitude","TimeOfDay","AmbientReverb","DistanceFactor","DopplerScale","RolloffScale"}
+GlobalProperties={nil,"Name","className","Parent","archivable"}
+GlobalEvents={nil,"AncestryChanged","ChildAdded","ChildRemoved","DescendantAdded","DescendantRemoving"}
+GlobalFunctions={nil,"Clone","FindFirstChild","GetChildren","GetFullName","IsA","IsAncesterOf","IsDescendantOf","Remove"}
+local Selection=game
+local updateDebounce=1
+Base="http://www.roblox.com/asset/?id="
+Images={Value=40332408,Sound=40332463,Script=40332546,ScreenGui=40332596,Part=40332760,Nil=40332825,Model=40332865,Message=40332942,LocalScript=40332996,Joint=40333049,Frame=40333121,Camera=40333217,Backpack=40333260,Player=40332674,Body=40339623,HopperBin=40339572,Tool=40339513,Workspace=40484518,Mesh=40484580,Property=40493937,Animation=40531758,Hat=40531808,Humanoid=40531903}
+Min=1
+Max=40
+MAXPAGEN=40
+--[[==================================================================]]
+function GetProperties(Object,Table)
+local Return={}
+local function C() end
+for i=1,#Table do
+if pcall(function() C(Object[Table[i]]) end) then
+if (Object:FindFirstChild(Table[i])==nil) then
+table.insert(Return,Table[i])
+end end end
+return Return
 end
 
- 
---- init base ---
- 
-local kek = {}
-kek.pool = pool.new(); pool = kek.pool; player = game.Players.LocalPlayer;
- 
- 
-CreateObject = function(properties)
-    local object = Instance.new(properties.Class)
-    for i, v in pairs(properties) do
-        pcall(function()
-            if v ~= "Class" then
-                object[i] = v
-            end
-        end)
-    end 
-    return object
+function GetType(Prop)
+if (type(Prop)=="userdata") then
+if pcall(function() Prop.Name=Prop.Name end) then
+return Prop.Name
+end end
+return Prop
 end
- 
- 
--- t.menus will now define pre-created objects instead of just '0xf'
-kek.menus = {
-    ["Main"] = {},
-    ["LocalPlayer"] = {Links = {}, Auto = {}, ReqBar = false},
-    ["Server"] = {Links = {"Destruction"}, Auto = {}, ReqBar = false},
-    ["Scripts"] = {Links = {}, Auto = {
-        CreateObject {
-            Class = "TextBox",
-            Name = "search",
-            BackgroundColor3 = Color3.new(14/255, 60/255, 66/255),
-            BorderColor3 = Color3.new(3/255, 53/255, 49/255),
-            Position = UDim2.new(0, 13, 0, 10),
-            Size = UDim2.new(1, -26, 0, 27),
-            Font = Enum.Font.SourceSans,
-            FontSize = Enum.FontSize.Size14,
-            Text = "Search for a script",
-            TextColor3 = Color3.new(204/255, 204/255, 204/255)
-        },
-        CreateObject {
-            Class = "ScrollingFrame",
-            Name = "list",
-            BackgroundColor3 = Color3.new(3/255, 39/255, 40/255),
-            BorderSizePixel = 0,
-            Position = UDim2.new(0, 13, 0, 50),
-            Size = UDim2.new(1, -26, 1, -60),
-            CanvasSize = UDim2.new(0, 0, 0, 0)
-        },
-    }, ReqBar = false},
-    ["Players"] = {Links = {}, Auto = {}, ReqBar = true},
-    ["Miscellaneous"] = {Links = {}, Auto = {}, ReqBar = false},
-    ["Explorer"] = {Links = {}, Auto = {}, ReqBar = false, DoNotInclude = true},
-    ["Destruction"] = {Links = {}, Auto = {}, ReqBar = false, DoNotInclude = true},
-    ["Music"] = {Links = {}, Auto = {}, ReqBar = false, DoNotInclude = true},
-    ["Gear"] = {Links = {}, Auto = {}, ReqBar = true, DoNotInclude = true},
-    ["FilterMyAss"] = {Links = {}, Auto = {}, ReqBar = true, DoNotInclude = true},
-    ["Memes"] = {Links = {}, Auto = {}, ReqBar = true, DoNotInclude = true},
-    ["Hats"] = {Links = {}, Auto = {}, ReqBar = true, DoNotInclude = true},
-    ["Credits"] = {Links = {}, Auto = {}, ReqBar = false, DoNotInclude = true},
-    ["Chatbox"] = {Links = {}, Auto = {}, ReqBar = false, DoNotInclude = true}
-}
- 
- 
---- global definitions ---
-pool.define("global","gui", game:GetObjects("rbxassetid://388041033")[1]); local gui = pool.get("global", "gui");
- local expl = pool.get("misc", "explorer")
-    local exm = game:GetObjects("rbxassetid://394831698")[1]
-    for i, v in pairs(exm:GetChildren()) do
-        v.Parent = expl.inner.min
-    end
-  localexplorer = expl.inner.min.ExplorerPanel 
-  localprop = expl.inner.min.PropertiesPanel
-  loadstring(localexplorer.LocalScript.Source)()
-  loadstring(localprop.Properties.Source)()
+
+function SetPropGui()
+if (Selection~=nil) then
+local PropGuiPos=0
+local Gui=game:GetService("CoreGui"):FindFirstChild("PropertiesGui")
+if (Gui~=nil) then
+Gui:Remove()
+end
+PropGui=Instance.new("ScreenGui")
+PropGui.Parent=game:GetService("CoreGui")
+PropGui.Name="PropertiesGui"
+local Props=GetProperties(Selection,Properties)
+for i=1,#Props do
+PropGuiPos=i
+local Get=GetType(Props[i])
+local Label=Instance.new("TextButton")
+Label.Parent=PropGui
+Label.Size=UDim2.new(0,150,0,15)
+Label.Text="     "..tostring(Get).." | "..tostring(Selection[Get])
+Label.BackgroundColor3=Color3.new(0.7,0.7,0.9)
+Label.Name=tostring(Get)
+Label.TextXAlignment="Left"
+Label.Position=UDim2.new(0,230,0,(i*15)-15)
+Label.TextColor3=Color3.new(0,0,0)
+Label.BorderColor3=Color3.new(0,0,0)
+Label.BackgroundTransparency=0.5
+Label.Active=false
+Label.AutoButtonColor=false
+CreateImageLabel(Label,Base..Images.Property)
+if (type(Selection[Props[i]])=="boolean") then
+if pcall(function() Selection[Props[i]]=Selection[Props[i]] end) then
+Label.Active=true
+Label.AutoButtonColor=true
+Label.BackgroundColor3=Color3.new(0.5,0.5,1)
+Label.MouseButton1Click:connect(function()
+if (Selection[Props[i]]==true) then
+Selection[Props[i]]=false
+elseif (Selection[Props[i]]==false) then
+Selection[Props[i]]=true
+end
+Label.Text="     "..tostring(Props[i]).." | "..tostring(Selection[Props[i]])
+end) end end end
+end end
+
+function CreateImageLabel(Par,image)
+local label=Instance.new("ImageLabel")
+label.BackgroundColor3=Color3.new(1,1,1)
+label.BackgroundTransparency=1
+label.Name="ItemImage"
+label.Size=UDim2.new(0,13,0,13)
+label.Position=UDim2.new(0,1,0,1)
+label.Image=image
+label.BorderSizePixel=0
+label.Parent=Par
+end
+
+function SetImage(Par,class)
+if (class=="IntValue") or (class=="BoolValue") or (class=="StringValue") or (class=="ObjectValue") or (class=="CFrameValue") or (class=="Vector3Value") or (class=="NumberValue") or (class=="RayValue") or (class=="Color3Value") or (class=="BrickColorValue") then
+CreateImageLabel(Par,Base..Images.Value)
+elseif (class=="Sound") or (class=="StockSound") or (class=="SoundService") then
+CreateImageLabel(Par,Base..Images.Sound)
+elseif (class=="Script") then
+CreateImageLabel(Par,Base..Images.Script)
+elseif (class=="ScreenGui") or (class=="GuiMain") or (class=="BillboardGui") then
+CreateImageLabel(Par,Base..Images.ScreenGui)
+elseif (class=="Part") or (class=="WedgePart") or (class=="TrussPart") then
+CreateImageLabel(Par,Base..Images.Part)
+elseif (class=="Model") then
+CreateImageLabel(Par,Base..Images.Model)
+elseif (class=="Hint") or (class=="Message") then
+CreateImageLabel(Par,Base..Images.Message)
+elseif (class=="LocalScript") then
+CreateImageLabel(Par,Base..Images.LocalScript)
+elseif (class=="Weld") or (class=="Snap") or (class=="Glue") or (class=="Rotate") or (class=="RotateP") or (class=="RotateV") or (class=="JointsService") then
+CreateImageLabel(Par,Base..Images.Joint)
+elseif (class=="Frame") or (class=="TextLabel") or (class=="TextButton") or (class=="TextBox") or (class=="ImageButton") or (class=="ImageLabel") then
+CreateImageLabel(Par,Base..Images.Frame)
+elseif (class=="Camera") then
+CreateImageLabel(Par,Base..Images.Camera)
+elseif (class=="Backpack") or (class=="StarterGear") or (class=="StarterPack") or (class=="StarterGui") or (class=="PlayerGui") then
+CreateImageLabel(Par,Base..Images.Backpack)
+elseif (class=="Player") or (class=="PseudoPlayer") or (class=="Players") then
+CreateImageLabel(Par,Base..Images.Player)
+elseif (class=="BodyPosition") or (class=="BodyGyro") or (class=="BodyVelocity") or (class=="BodyThrust") or (class=="BodyForce") or (class=="RocketPropulsion") then
+CreateImageLabel(Par,Base..Images.Body)
+elseif (class=="HopperBin") then
+CreateImageLabel(Par,Base..Images.HopperBin)
+elseif (class=="Tool") then
+CreateImageLabel(Par,Base..Images.Tool)
+elseif (class=="Workspace") then
+CreateImageLabel(Par,Base..Images.Workspace)
+elseif (class=="BlockMesh") or (class=="SpecialMesh") or (class=="CylinderMesh") then
+CreateImageLabel(Par,Base..Images.Mesh)
+elseif (class=="Animation") or (class=="CharacterMesh") then
+CreateImageLabel(Par,Base..Images.Animation)
+elseif (class=="Hat") then
+CreateImageLabel(Par,Base..Images.Hat)
+elseif (class=="Humanoid") then
+CreateImageLabel(Par,Base..Images.Humanoid)
+elseif (class=="StarterScript") then
+CreateImageLabel(Par,Base..Images.LocalScript)
+elseif (class=="CoreScript") then
+CreateImageLabel(Par,Base..Images.LocalScript)
+else CreateImageLabel(Par,Base..Images.Nil)
+end
+end
+
+function SetExplGui()
+if (Selection~=nil) then
+local Gui=game:GetService("CoreGui"):FindFirstChild("ExplorerGui")
+if (Gui~=nil) then Gui:Remove() end
+local Children=Selection:GetChildren()
+ExplGui=Instance.new("ScreenGui")
+ExplGui.Parent=game:GetService("CoreGui")
+ExplGui.Name="ExplorerGui"
+if (Selection.Parent~=nil) then
+local BackButton=Instance.new("TextButton")
+BackButton.Size=UDim2.new(0,120,0,15)
+BackButton.BorderColor3=Color3.new(0,0,0)
+BackButton.TextColor3=Color3.new(0,0,0)
+BackButton.Parent=ExplGui
+BackButton.Text="Back to " .. Selection.Parent.Name
+BackButton.BackgroundColor3=Color3.new(0.3,0.3,1)
+BackButton.BackgroundTransparency=0.5
+BackButton.Position=UDim2.new(0,380,0,0)
+BackButton.Name="Back"
+BackButton.MouseButton1Click:connect(function()
+Selection=Selection.Parent
+SetExplGui()
+SetPropGui()
+end) end
+if (#Children>=MAXPAGEN) then
+local f=0
+for i=Min,Max do
+f=f+1
+local Obj=Instance.new("TextButton")
+Obj.Size=UDim2.new(0,120,0,15)
+Obj.BorderColor3=Color3.new(0,0,0)
+Obj.TextColor3=Color3.new(0,0,0)
+Obj.Parent=ExplGui
+pcall(function()        Obj.Text="     "..Children[i].Name        end)
+Obj.BackgroundColor3=Color3.new(0.4,0.4,0.6)
+Obj.BackgroundTransparency=0.5
+Obj.TextXAlignment="Left"
+if (Selection.Parent~=nil) then Obj.Position=UDim2.new(0,380,0,(f*15)) else Obj.Position=UDim2.new(0,380,0,(f*15)-15) end
+Obj.Name=Children[i].Name
+SetImage(Obj,Children[i].className)
+Obj.MouseButton1Click:connect(function() pcall(function() Selection=Children[i] SetExplGui() SetPropGui() end) end)
+Obj.MouseButton2Click:connect(function()
+if Children[i]:IsA("Script") or Children[i]:IsA("localScript") then
+local screengui = Instance.new("ScreenGui")
+screengui.Parent = game:GetService("CoreGui")
+screengui.Name = "Source"
+local title = Instance.new("TextLabel")
+title.Parent = screengui
+title.Name = "Title"
+title.Active = true
+title.BackgroundColor = BrickColor.new(230,230,230)
+title.BorderColor3 = Color3.new(0/0,0/0,0/0)
+title.Draggable = false
+title.Font = "ArialBold"
+title.FontSize = "Size18"
+title.Position = UDim2.new(0,0,0,0)
+title.Size = UDim2.new(1,0,0.03,0)
+title.Text = Children[i].Name
+title.TextColor3 = Color3.new(0/0,0/0,0/0)
+title.Visible = true
+
+local textbox = Instance.new("TextBox")
+textbox.Parent = title
+textbox.BackgroundColor = BrickColor.new(255,255,255)
+textbox.BackgroundTransparency = 0
+textbox.Position = UDim2.new(0,0,1,0)
+textbox.Size = UDim2.new(1,0,32.37,0)
+textbox.Text = Children[i].Source
+textbox.TextColor3 = Color3.new(0/0,0/0,0/0)
+textbox.TextXAlignment = "Left"
+textbox.TextYAlignment = "Top"
+textbox.BorderColor3 = Color3.new(0/0,0/0,0/0)
+textbox.FontSize = "Size11"
+textbox.ClearTextOnFocus = false
+textbox.Draggable = false
+textbox.MultiLine = true
+textbox.TextWrap = true
+
+local xbutton = Instance.new("TextButton")
+xbutton.Parent = title
+xbutton.Name = "xButton"
+xbutton.BackgroundColor = BrickColor.new("Really black")
+xbutton.BorderColor3 = Color3.new(255/255,0/0,0/0)
+xbutton.Position = UDim2.new(0.987,0,0,0)
+xbutton.Size = UDim2.new(0.01,0,1,0)
+xbutton.BackgroundTransparency = 1
+xbutton.Font = "Arial"
+xbutton.FontSize = "Size18"
+xbutton.Text = "X"
+xbutton.MouseButton1Down:connect(function()
+Children[i].Source = textbox.Text
+Children[i].Disabled = true
+Children[i].Disabled = false
+screengui:Remove()
+end)
+end
+end)
+local Remove=Instance.new("TextButton")
+Remove.Size=UDim2.new(0,15,0,15)
+Remove.BorderColor3=Color3.new(0,0,0)
+Remove.TextColor3=Color3.new(0,0,0)
+Remove.Parent=ExplGui
+Remove.Text="X"
+Remove.BackgroundColor3=Color3.new(1,0.25,0.25)
+Remove.BackgroundTransparency=0.5
+Remove.Name="Remove" .. Children[i].Name
+if (Selection.Parent~=nil) then Remove.Position=UDim2.new(0,500,0,(f*15)) else Remove.Position=UDim2.new(0,500,0,(f*15)-15) end
+Remove.MouseButton1Click:connect(function() if (pcall(function() Children[i]:Remove() end)) then SetPropGui() SetExplGui() else  Remove.BackgroundColor3=Color3.new(1,1,1) wait(1) Remove.BackgroundColor3=Color3.new(1,0.25,0.25) end end)
+end 
+local UP=Instance.new("TextButton")
+UP.Position=UDim2.new(0,515,0,0)
+UP.Size=UDim2.new(0,15,0,15)
+UP.BorderColor3=Color3.new(0,0,0)
+UP.TextColor3=Color3.new(0,0,0)
+UP.Parent=ExplGui
+UP.Text="^"
+UP.BackgroundColor3=Color3.new(1,0.25,0.25)
+UP.BackgroundTransparency=0.5
+UP.Name="UpButton"
+buttondown = false
+UP.MouseButton1Down:connect(function()
+if (Min<=1) then return end
+buttondown = true
+repeat Min=Min-1
+wait(0.2)
+Max=Max-1
+SetExplGui()
+until buttondown == false
+end)
+
+UP.MouseButton1Up:connect(function()
+buttondown = false
+end)
+local DOWN=Instance.new("TextButton")
+DOWN.Position=UDim2.new(0,515,0,15)
+DOWN.Size=UDim2.new(0,15,0,15)
+DOWN.BorderColor3=Color3.new(0,0,0)
+DOWN.TextColor3=Color3.new(0,0,0)
+DOWN.Parent=ExplGui
+DOWN.Text="v"
+DOWN.BackgroundColor3=Color3.new(1,0.25,0.25)
+DOWN.BackgroundTransparency=0.5
+DOWN.Name="DownButton"
+DOWN.MouseButton1Down:connect(function()
+if (Max>=#Children) then return end
+buttondown = true
+repeat
+wait(0.2)
+Min=Min+1
+Max=Max+1
+pcall(function()        SetExplGui()        end)
+until buttondown == false
+end)
+DOWN.MouseButton1Up:connect(function()
+buttondown = false
+end)
+else
+Max=MAXPAGEN
+Min=1
+for i=1,#Children do
+local Obj=Instance.new("TextButton")
+Obj.Size=UDim2.new(0,120,0,15)
+Obj.BorderColor3=Color3.new(0,0,0)
+Obj.TextColor3=Color3.new(0,0,0)
+Obj.Parent=ExplGui
+Obj.Text="     "..Children[i].Name
+Obj.BackgroundColor3=Color3.new(0.4,0.4,0.6)
+Obj.BackgroundTransparency=0.5
+Obj.TextXAlignment="Left"
+if (Selection.Parent~=nil) then Obj.Position=UDim2.new(0,380,0,(i*15)) else Obj.Position=UDim2.new(0,380,0,(i*15)-15) end
+Obj.Name=Children[i].Name
+SetImage(Obj,Children[i].className)
+Obj.MouseButton1Click:connect(function() pcall(function() Selection=Children[i] SetExplGui() SetPropGui() end) end)
+Obj.MouseButton2Click:connect(function()
+if Children[i]:IsA("Script") or Children[i]:IsA("localScript") then
+local screengui = Instance.new("ScreenGui")
+screengui.Parent = game:GetService("CoreGui")
+screengui.Name = "Source"
+local title = Instance.new("TextLabel")
+title.Parent = screengui
+title.Name = "Title"
+title.Active = true
+title.BackgroundColor = BrickColor.new(230,230,230)
+title.BorderColor3 = Color3.new(0/0,0/0,0/0)
+title.Draggable = false
+title.Font = "ArialBold"
+title.FontSize = "Size18"
+title.Position = UDim2.new(0,0,0,0)
+title.Size = UDim2.new(1,0,0.03,0)
+title.Text = Children[i].Name
+title.TextColor3 = Color3.new(0/0,0/0,0/0)
+title.Visible = true
+
+local textbox = Instance.new("TextBox")
+textbox.Parent = title
+textbox.BackgroundColor = BrickColor.new(255,255,255)
+textbox.BackgroundTransparency = 0
+textbox.Position = UDim2.new(0,0,1,0)
+textbox.Size = UDim2.new(1,0,32.37,0)
+textbox.Text = Children[i].Source
+textbox.TextColor3 = Color3.new(0/0,0/0,0/0)
+textbox.TextXAlignment = "Left"
+textbox.TextYAlignment = "Top"
+textbox.BorderColor3 = Color3.new(0/0,0/0,0/0)
+textbox.FontSize = "Size11"
+textbox.ClearTextOnFocus = false
+textbox.Draggable = false
+textbox.MultiLine = true
+textbox.TextWrap = true
+
+local xbutton = Instance.new("TextButton")
+xbutton.Parent = title
+xbutton.Name = "xButton"
+xbutton.BackgroundColor = BrickColor.new("Really black")
+xbutton.BorderColor3 = Color3.new(255/255,0/0,0/0)
+xbutton.Position = UDim2.new(0.987,0,0,0)
+xbutton.Size = UDim2.new(0.01,0,1,0)
+xbutton.BackgroundTransparency = 1
+xbutton.Font = "Arial"
+xbutton.FontSize = "Size18"
+xbutton.Text = "X"
+xbutton.MouseButton1Down:connect(function()
+Children[i].Source = textbox.Text
+Children[i].Disabled = true
+Children[i].Disabled = false
+screengui:Remove()
+end)
+end
+end)
+local Remove=Instance.new("TextButton")
+Remove.Size=UDim2.new(0,15,0,15)
+Remove.BorderColor3=Color3.new(0,0,0)
+Remove.TextColor3=Color3.new(0,0,0)
+Remove.Parent=ExplGui
+Remove.Text="X"
+Remove.BackgroundColor3=Color3.new(1,0.25,0.25)
+Remove.BackgroundTransparency=0.5
+Remove.Name="Remove" .. Children[i].Name
+if (Selection.Parent~=nil) then Remove.Position=UDim2.new(0,500,0,(i*15)) else Remove.Position=UDim2.new(0,500,0,(i*15)-15) end
+Remove.MouseButton1Click:connect(function() if (pcall(function() Children[i]:Remove() end)) then SetPropGui() SetExplGui() else  Remove.BackgroundColor3=Color3.new(1,1,1) wait(1) Remove.BackgroundColor3=Color3.new(1,0.25,0.25) end end) 
+end
+end 
+end
+----------------
+Selection.Changed:connect(function(prop)
+if (Selection==game) then return end
+if (updateDebounce==1) then
+updateDebounce=0
+if (Selection.Parent==nil) then 
+Selection=game 
+updateDebounce=1
+SetPropGui()
+SetExplGui()
+return end
+if (PropGui~=nil) then
+local Button=PropGui:FindFirstChild(prop)
+if (Button~=nil) then
+local Get=GetType(prop)
+Button.Text="     "..tostring(Get).." | "..tostring(Selection[Get])
+end end
+wait()
+updateDebounce=1
+end end) 
+---------------------------
+end
+SetPropGui()
+SetExplGui()
+
+else
+
+game:GetService("CoreGui").PropertiesGui:Remove()
+game:GetService("CoreGui").ExplorerGui:Remove()
+end
+end)
+end
+
+
+
+game:GetService("CoreGui").ChildRemoved:connect(function()
+if game:GetService("CoreGui"):FindFirstChild("ExplorerButton") == nil then
+wait()
+local screengui = Instance.new("ScreenGui")
+screengui.Parent = game:GetService("CoreGui")
+screengui.Name = "ExplorerButton"
+local text = Instance.new("TextButton")
+text.Parent = screengui
+text.Active = true
+text.BackgroundColor = BrickColor.new("Really black")
+text.BorderColor3 = Color3.new(255/255,0/0,0/0)
+text.Position = UDim2.new(0.14,0,0.97,0)
+text.Size = UDim2.new(0.1,0,0.025,0)
+text.Text = "Explorer"
+text.TextColor3 = Color3.new(255/255,255/255,255/255)
+
+text.MouseButton1Down:connect(function()
+if game:GetService("CoreGui"):FindFirstChild("ExplorerGui") == nil and game:GetService("CoreGui"):FindFirstChild("PropertiesGui") == nil then
+
+Properties={nil,"Source","Name","ScriptsDisabled","GarbageCollectionLimit","GarbageCollectionFrequency","DataCost","RobloxLocked","Version","className","Parent","archivable","AttachmentForward","AttachmentPos","AttachmentRight","AttachmentUp","AnimationId","HeadColor","RightArmColor","LeftArmColor","TorsoColor","LeftLegColor","RightLegColor","Value","CameraType","CameraSubject","BaseTextureId","BodyPart","MeshId","OverlayTextureId","MaxActivationDistance","Shiny","Specular","Texture","Face","GripForward","GripPos","GripRight","GripUp","TextureId","TeamColor","Enabled","CFrame","BrickColor","Material","Reflectance","Transparency","Position","RotVelocity","Velocity","Anchored","CanCollide","Locked","Elasticity","Friction","Shape","Size","formFactor","BackSurface","BottomSurface","FrontSurface","LeftSurface","RightSurface","TopSurface","AbsolutePosition","AbsoluteSize","Active","BackgroundColor3","BackgroundTransparency","BorderColor3","BorderSizePixel","SizeConstraint","Visible","ZIndex","C0","C1","Part0","Part1","BinType","LeftLeg","RightLeg","Torso","Health","MaxHealth","WalkSpeed","Jump","PlatformStand","Sit","AutoButtonColor","Image","LinkedSource","Disabled","Text","PrimaryPart","CurrentAngle","DesiredAngle","MaxVelocity","PantsTemplate","ShirtTemplate","SoundId","Pitch","IsPlaying","IsPaused","Looped","PlayOnRemove","StudsPerTileU","StudsPerTileV","userId","BubbleChat","ClassicChat","MaxPlayers","NumPlayers","LocalPlayer","CharacterAppearance","Character","CurrentCamera","Ambient","Brightness","ColorShift_Bottom","ColorShift_Top","ShadowColor","GeographicLatitude","TimeOfDay","AmbientReverb","DistanceFactor","DopplerScale","RolloffScale"}
+GlobalProperties={nil,"Name","className","Parent","archivable"}
+GlobalEvents={nil,"AncestryChanged","ChildAdded","ChildRemoved","DescendantAdded","DescendantRemoving"}
+GlobalFunctions={nil,"Clone","FindFirstChild","GetChildren","GetFullName","IsA","IsAncesterOf","IsDescendantOf","Remove"}
+local Selection=game
+local updateDebounce=1
+Base="http://www.roblox.com/asset/?id="
+Images={Value=40332408,Sound=40332463,Script=40332546,ScreenGui=40332596,Part=40332760,Nil=40332825,Model=40332865,Message=40332942,LocalScript=40332996,Joint=40333049,Frame=40333121,Camera=40333217,Backpack=40333260,Player=40332674,Body=40339623,HopperBin=40339572,Tool=40339513,Workspace=40484518,Mesh=40484580,Property=40493937,Animation=40531758,Hat=40531808,Humanoid=40531903}
+Min=1
+Max=40
+MAXPAGEN=40
+--[[==================================================================]]
+function GetProperties(Object,Table)
+local Return={}
+local function C() end
+for i=1,#Table do
+if pcall(function() C(Object[Table[i]]) end) then
+if (Object:FindFirstChild(Table[i])==nil) then
+table.insert(Return,Table[i])
+end end end
+return Return
+end
+
+function GetType(Prop)
+if (type(Prop)=="userdata") then
+if pcall(function() Prop.Name=Prop.Name end) then
+return Prop.Name
+end end
+return Prop
+end
+
+function SetPropGui()
+if (Selection~=nil) then
+local PropGuiPos=0
+local Gui=game:GetService("CoreGui"):FindFirstChild("PropertiesGui")
+if (Gui~=nil) then
+Gui:Remove()
+end
+PropGui=Instance.new("ScreenGui")
+PropGui.Parent=game:GetService("CoreGui")
+PropGui.Name="PropertiesGui"
+local Props=GetProperties(Selection,Properties)
+for i=1,#Props do
+PropGuiPos=i
+local Get=GetType(Props[i])
+local Label=Instance.new("TextButton")
+Label.Parent=PropGui
+Label.Size=UDim2.new(0,150,0,15)
+Label.Text="     "..tostring(Get).." | "..tostring(Selection[Get])
+Label.BackgroundColor3=Color3.new(0.7,0.7,0.9)
+Label.Name=tostring(Get)
+Label.TextXAlignment="Left"
+Label.Position=UDim2.new(0,230,0,(i*15)-15)
+Label.TextColor3=Color3.new(0,0,0)
+Label.BorderColor3=Color3.new(0,0,0)
+Label.BackgroundTransparency=0.5
+Label.Active=false
+Label.AutoButtonColor=false
+CreateImageLabel(Label,Base..Images.Property)
+if (type(Selection[Props[i]])=="boolean") then
+if pcall(function() Selection[Props[i]]=Selection[Props[i]] end) then
+Label.Active=true
+Label.AutoButtonColor=true
+Label.BackgroundColor3=Color3.new(0.5,0.5,1)
+Label.MouseButton1Click:connect(function()
+if (Selection[Props[i]]==true) then
+Selection[Props[i]]=false
+elseif (Selection[Props[i]]==false) then
+Selection[Props[i]]=true
+end
+Label.Text="     "..tostring(Props[i]).." | "..tostring(Selection[Props[i]])
+end) end end end
+end end
+
+function CreateImageLabel(Par,image)
+local label=Instance.new("ImageLabel")
+label.BackgroundColor3=Color3.new(1,1,1)
+label.BackgroundTransparency=1
+label.Name="ItemImage"
+label.Size=UDim2.new(0,13,0,13)
+label.Position=UDim2.new(0,1,0,1)
+label.Image=image
+label.BorderSizePixel=0
+label.Parent=Par
+end
+
+function SetImage(Par,class)
+if (class=="IntValue") or (class=="BoolValue") or (class=="StringValue") or (class=="ObjectValue") or (class=="CFrameValue") or (class=="Vector3Value") or (class=="NumberValue") or (class=="RayValue") or (class=="Color3Value") or (class=="BrickColorValue") then
+CreateImageLabel(Par,Base..Images.Value)
+elseif (class=="Sound") or (class=="StockSound") or (class=="SoundService") then
+CreateImageLabel(Par,Base..Images.Sound)
+elseif (class=="Script") then
+CreateImageLabel(Par,Base..Images.Script)
+elseif (class=="ScreenGui") or (class=="GuiMain") or (class=="BillboardGui") then
+CreateImageLabel(Par,Base..Images.ScreenGui)
+elseif (class=="Part") or (class=="WedgePart") or (class=="TrussPart") then
+CreateImageLabel(Par,Base..Images.Part)
+elseif (class=="Model") then
+CreateImageLabel(Par,Base..Images.Model)
+elseif (class=="Hint") or (class=="Message") then
+CreateImageLabel(Par,Base..Images.Message)
+elseif (class=="LocalScript") then
+CreateImageLabel(Par,Base..Images.LocalScript)
+elseif (class=="Weld") or (class=="Snap") or (class=="Glue") or (class=="Rotate") or (class=="RotateP") or (class=="RotateV") or (class=="JointsService") then
+CreateImageLabel(Par,Base..Images.Joint)
+elseif (class=="Frame") or (class=="TextLabel") or (class=="TextButton") or (class=="TextBox") or (class=="ImageButton") or (class=="ImageLabel") then
+CreateImageLabel(Par,Base..Images.Frame)
+elseif (class=="Camera") then
+CreateImageLabel(Par,Base..Images.Camera)
+elseif (class=="Backpack") or (class=="StarterGear") or (class=="StarterPack") or (class=="StarterGui") or (class=="PlayerGui") then
+CreateImageLabel(Par,Base..Images.Backpack)
+elseif (class=="Player") or (class=="PseudoPlayer") or (class=="Players") then
+CreateImageLabel(Par,Base..Images.Player)
+elseif (class=="BodyPosition") or (class=="BodyGyro") or (class=="BodyVelocity") or (class=="BodyThrust") or (class=="BodyForce") or (class=="RocketPropulsion") then
+CreateImageLabel(Par,Base..Images.Body)
+elseif (class=="HopperBin") then
+CreateImageLabel(Par,Base..Images.HopperBin)
+elseif (class=="Tool") then
+CreateImageLabel(Par,Base..Images.Tool)
+elseif (class=="Workspace") then
+CreateImageLabel(Par,Base..Images.Workspace)
+elseif (class=="BlockMesh") or (class=="SpecialMesh") or (class=="CylinderMesh") then
+CreateImageLabel(Par,Base..Images.Mesh)
+elseif (class=="Animation") or (class=="CharacterMesh") then
+CreateImageLabel(Par,Base..Images.Animation)
+elseif (class=="Hat") then
+CreateImageLabel(Par,Base..Images.Hat)
+elseif (class=="Humanoid") then
+CreateImageLabel(Par,Base..Images.Humanoid)
+elseif (class=="StarterScript") then
+CreateImageLabel(Par,Base..Images.LocalScript)
+elseif (class=="CoreScript") then
+CreateImageLabel(Par,Base..Images.LocalScript)
+else CreateImageLabel(Par,Base..Images.Nil)
+end
+end
+
+function SetExplGui()
+if (Selection~=nil) then
+local Gui=game:GetService("CoreGui"):FindFirstChild("ExplorerGui")
+if (Gui~=nil) then Gui:Remove() end
+local Children=Selection:GetChildren()
+ExplGui=Instance.new("ScreenGui")
+ExplGui.Parent=game:GetService("CoreGui")
+ExplGui.Name="ExplorerGui"
+if (Selection.Parent~=nil) then
+local BackButton=Instance.new("TextButton")
+BackButton.Size=UDim2.new(0,120,0,15)
+BackButton.BorderColor3=Color3.new(0,0,0)
+BackButton.TextColor3=Color3.new(0,0,0)
+BackButton.Parent=ExplGui
+BackButton.Text="Back to " .. Selection.Parent.Name
+BackButton.BackgroundColor3=Color3.new(0.3,0.3,1)
+BackButton.BackgroundTransparency=0.5
+BackButton.Position=UDim2.new(0,380,0,0)
+BackButton.Name="Back"
+BackButton.MouseButton1Click:connect(function()
+Selection=Selection.Parent
+SetExplGui()
+SetPropGui()
+end) end
+if (#Children>=MAXPAGEN) then
+local f=0
+for i=Min,Max do
+f=f+1
+local Obj=Instance.new("TextButton")
+Obj.Size=UDim2.new(0,120,0,15)
+Obj.BorderColor3=Color3.new(0,0,0)
+Obj.TextColor3=Color3.new(0,0,0)
+Obj.Parent=ExplGui
+Obj.Text="     "..Children[i].Name
+Obj.BackgroundColor3=Color3.new(0.4,0.4,0.6)
+Obj.BackgroundTransparency=0.5
+Obj.TextXAlignment="Left"
+if (Selection.Parent~=nil) then Obj.Position=UDim2.new(0,380,0,(f*15)) else Obj.Position=UDim2.new(0,380,0,(f*15)-15) end
+Obj.Name=Children[i].Name
+SetImage(Obj,Children[i].className)
+Obj.MouseButton1Click:connect(function() pcall(function() Selection=Children[i] SetExplGui() SetPropGui() end) end)
+local Remove=Instance.new("TextButton")
+Remove.Size=UDim2.new(0,15,0,15)
+Remove.BorderColor3=Color3.new(0,0,0)
+Remove.TextColor3=Color3.new(0,0,0)
+Remove.Parent=ExplGui
+Remove.Text="X"
+Remove.BackgroundColor3=Color3.new(1,0.25,0.25)
+Remove.BackgroundTransparency=0.5
+Remove.Name="Remove" .. Children[i].Name
+if (Selection.Parent~=nil) then Remove.Position=UDim2.new(0,500,0,(f*15)) else Remove.Position=UDim2.new(0,500,0,(f*15)-15) end
+Remove.MouseButton1Click:connect(function() if (pcall(function() Children[i]:Remove() end)) then SetPropGui() SetExplGui() else  Remove.BackgroundColor3=Color3.new(1,1,1) wait(1) Remove.BackgroundColor3=Color3.new(1,0.25,0.25) end end)
+end 
+local UP=Instance.new("TextButton")
+UP.Position=UDim2.new(0,515,0,0)
+UP.Size=UDim2.new(0,15,0,15)
+UP.BorderColor3=Color3.new(0,0,0)
+UP.TextColor3=Color3.new(0,0,0)
+UP.Parent=ExplGui
+UP.Text="^"
+UP.BackgroundColor3=Color3.new(1,0.25,0.25)
+UP.BackgroundTransparency=0.5
+UP.Name="UpButton"
+UP.MouseButton1Click:connect(function() if (Min<=1) then return end Min=Min-1 Max=Max-1 SetExplGui() end)
+local DOWN=Instance.new("TextButton")
+DOWN.Position=UDim2.new(0,515,0,15)
+DOWN.Size=UDim2.new(0,15,0,15)
+DOWN.BorderColor3=Color3.new(0,0,0)
+DOWN.TextColor3=Color3.new(0,0,0)
+DOWN.Parent=ExplGui
+DOWN.Text="v"
+DOWN.BackgroundColor3=Color3.new(1,0.25,0.25)
+DOWN.BackgroundTransparency=0.5
+DOWN.Name="DownButton"
+DOWN.MouseButton1Click:connect(function() if (Max>=#Children) then return end Min=Min+1 Max=Max+1 SetExplGui() end)
+else
+Max=MAXPAGEN
+Min=1
+for i=1,#Children do
+local Obj=Instance.new("TextButton")
+Obj.Size=UDim2.new(0,120,0,15)
+Obj.BorderColor3=Color3.new(0,0,0)
+Obj.TextColor3=Color3.new(0,0,0)
+Obj.Parent=ExplGui
+Obj.Text="     "..Children[i].Name
+Obj.BackgroundColor3=Color3.new(0.4,0.4,0.6)
+Obj.BackgroundTransparency=0.5
+Obj.TextXAlignment="Left"
+if (Selection.Parent~=nil) then Obj.Position=UDim2.new(0,380,0,(i*15)) else Obj.Position=UDim2.new(0,380,0,(i*15)-15) end
+Obj.Name=Children[i].Name
+SetImage(Obj,Children[i].className)
+Obj.MouseButton1Click:connect(function() pcall(function() Selection=Children[i] SetExplGui() SetPropGui() end) end)
+local Remove=Instance.new("TextButton")
+Remove.Size=UDim2.new(0,15,0,15)
+Remove.BorderColor3=Color3.new(0,0,0)
+Remove.TextColor3=Color3.new(0,0,0)
+Remove.Parent=ExplGui
+Remove.Text="X"
+Remove.BackgroundColor3=Color3.new(1,0.25,0.25)
+Remove.BackgroundTransparency=0.5
+Remove.Name="Remove" .. Children[i].Name
+if (Selection.Parent~=nil) then Remove.Position=UDim2.new(0,500,0,(i*15)) else Remove.Position=UDim2.new(0,500,0,(i*15)-15) end
+Remove.MouseButton1Click:connect(function() if (pcall(function() Children[i]:Remove() end)) then SetPropGui() SetExplGui() else  Remove.BackgroundColor3=Color3.new(1,1,1) wait(1) Remove.BackgroundColor3=Color3.new(1,0.25,0.25) end end) 
+end
+end 
+end
+----------------
+Selection.Changed:connect(function(prop)
+if (Selection==game) then return end
+if (updateDebounce==1) then
+updateDebounce=0
+if (Selection.Parent==nil) then 
+Selection=game 
+updateDebounce=1
+SetPropGui()
+SetExplGui()
+return end
+if (PropGui~=nil) then
+local Button=PropGui:FindFirstChild(prop)
+if (Button~=nil) then
+local Get=GetType(prop)
+Button.Text="     "..tostring(Get).." | "..tostring(Selection[Get])
+end end
+wait()
+updateDebounce=1
+end end) 
+---------------------------
+end
+SetPropGui()
+SetExplGui()
+
+else
+
+game:GetService("CoreGui").PropertiesGui:Remove()
+game:GetService("CoreGui").ExplorerGui:Remove()
+end
+end)
+end
+end)
